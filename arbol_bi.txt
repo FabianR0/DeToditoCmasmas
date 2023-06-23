@@ -1,0 +1,186 @@
+#include <iostream>
+using namespace std;
+
+struct Nodo {
+    int valor;
+    Nodo* izquierda;
+    Nodo* derecha;
+};
+
+Nodo* crearNodo(int valor) {
+    Nodo* nuevoNodo = new Nodo();
+    nuevoNodo->valor = valor;
+    nuevoNodo->izquierda = nullptr;
+    nuevoNodo->derecha = nullptr;
+    return nuevoNodo;
+}
+
+void agregarNodo(Nodo*& raiz, int valor) {
+    if (raiz == nullptr) {
+        raiz = crearNodo(valor);
+        return;
+    }
+    if (valor < raiz->valor) {
+        agregarNodo(raiz->izquierda, valor);
+    } else {
+        agregarNodo(raiz->derecha, valor);
+    }
+}
+
+void mostrarArbol(Nodo* raiz, int nivel = 0) {
+    if (raiz == nullptr) {
+        return;
+    }
+    mostrarArbol(raiz->derecha, nivel + 1);
+    for (int i = 0; i < nivel; i++) {
+        cout << "    ";
+    }
+    cout << raiz->valor << endl;
+    mostrarArbol(raiz->izquierda, nivel + 1);
+}
+
+Nodo* buscarNodo(Nodo* raiz, int valor) {
+    if (raiz == nullptr || raiz->valor == valor) {
+        return raiz;
+    }
+    if (valor < raiz->valor) {
+        return buscarNodo(raiz->izquierda, valor);
+    }
+    return buscarNodo(raiz->derecha, valor);
+}
+
+void recorridoPreorden(Nodo* raiz) {
+    if (raiz == nullptr) {
+        return;
+    }
+    cout << raiz->valor << " ";
+    recorridoPreorden(raiz->izquierda);
+    recorridoPreorden(raiz->derecha);
+}
+
+void recorridoInorden(Nodo* raiz) {
+    if (raiz == nullptr) {
+        return;
+    }
+    recorridoInorden(raiz->izquierda);
+    cout << raiz->valor << " ";
+    recorridoInorden(raiz->derecha);
+}
+
+void recorridoPostorden(Nodo* raiz) {
+    if (raiz == nullptr) {
+        return;
+    }
+    recorridoPostorden(raiz->izquierda);
+    recorridoPostorden(raiz->derecha);
+    cout << raiz->valor << " ";
+}
+
+Nodo* encontrarSucesor(Nodo* nodo) {
+    Nodo* actual = nodo->derecha;
+    while (actual != nullptr && actual->izquierda != nullptr) {
+        actual = actual->izquierda;
+    }
+    return actual;
+}
+
+void eliminarNodo(Nodo*& raiz, int valor) {
+    if (raiz == nullptr) {
+        return;
+    }
+    if (valor < raiz->valor) {
+        eliminarNodo(raiz->izquierda, valor);
+    } else if (valor > raiz->valor) {
+        eliminarNodo(raiz->derecha, valor);
+    } else {
+        if (raiz->izquierda == nullptr) {
+            Nodo* temporal = raiz->derecha;
+            delete raiz;
+            raiz = temporal;
+        } 
+		else if (raiz->derecha == nullptr) {
+            Nodo* temporal = raiz->izquierda;
+            delete raiz;
+            raiz = temporal;
+            } 
+		else {
+        Nodo* sucesor = encontrarSucesor(raiz);
+        raiz->valor = sucesor->valor;
+        eliminarNodo(raiz->derecha, sucesor->valor);
+   		 }
+	}
+}
+
+int main() {
+	Nodo* raiz = nullptr;
+	int opcion;
+	do {
+	cout << "Ingrese una opción:\n";
+	cout << "1. Agregar nodo\n";
+	cout << "2. Mostrar árbol\n";
+	cout << "3. Buscar nodo\n";
+	cout << "4. Recorrido preorden\n";
+	cout << "5. Recorrido inorden\n";
+	cout << "6. Recorrido postorden\n";
+	cout << "7. Eliminar nodo\n";
+	cout << "8. Salir\n";
+	cin >> opcion;
+	switch(opcion) {
+		case 1: {
+		int valor;
+		cout << "Ingrese el valor del nodo: ";
+		cin >> valor;
+		agregarNodo(raiz, valor);
+		break;
+		}
+		case 2: {
+		mostrarArbol(raiz);
+		break;
+		}
+		case 3: {
+		int valor;
+		cout << "Ingrese el valor a buscar: ";
+		cin >> valor;
+		Nodo* nodo = buscarNodo(raiz, valor);
+		if (nodo == nullptr) {
+		cout << "No se encontró el nodo\n";
+		} else {
+		cout << "Se encontró el nodo\n";
+		}
+		break;
+		}
+		case 4: {
+		recorridoPreorden(raiz);
+		cout << endl;
+		break;
+		}
+		case 5: {
+		recorridoInorden(raiz);
+		cout << endl;
+		break;
+		}
+		case 6: {
+		recorridoPostorden(raiz);
+		cout << endl;
+		break;
+		}
+		case 7: {
+		int valor;
+		cout << "Ingrese el valor del nodo a eliminar: ";
+		cin >> valor;
+		eliminarNodo(raiz, valor);
+		break;
+		}
+		case 8: {
+		cout << "Saliendo...\n";
+		break;
+		}
+	default: {
+	cout << "Opción inválida\n";
+	break;
+		}
+	}
+	} while (opcion != 8);
+	return 0;
+}
+

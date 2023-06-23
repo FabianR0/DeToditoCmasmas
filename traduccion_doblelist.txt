@@ -1,0 +1,49 @@
+Una lista DLL (lista de enlaces dobles) es muy similar a una lista SLL excepto que cada
+el nodo u en una DLList tiene referencias tanto al nodo u.next que lo sigue
+y el nodo u.prev que le precede.
+
+Al implementar una SLList, vimos que siempre había varios
+casos especiales de los que preocuparse. Por ejemplo, eliminando el último elemento
+desde una SLList o agregar un elemento a una SLList vacía requiere cuidado
+para asegurarse de que la cabeza y la cola se actualicen correctamente. En una lista DLL, el
+número de estos casos especiales aumenta considerablemente. Quizás el más limpio
+forma de ocuparse de todos estos casos especiales en un DLList es introducir un
+nodo ficticio. Este es un nodo que no contiene ningún dato, pero actúa como un
+marcador de posición para que no haya nodos especiales; cada nodo tiene un siguiente
+y un anterior, con dummy actuando como el nodo que sigue al último nodo en el
+lista y que precede al primer nodo de la lista. De esta forma, los nodos de
+la lista está (doblemente) vinculada en un ciclo,
+
+Encontrar el nodo con un índice particular en un DLList es fácil; podemos
+comience en el encabezado de la lista (dummy.next) y siga adelante, o comience
+al final de la lista (dummy.prev) y trabaje hacia atrás. Esto nos permite
+alcanzar el i-ésimo nodo en O(1 + min{i,n − i}) tiempo:
+
+Las operaciones get(i) y set(i,x) ahora también son fáciles. Primero encontramos
+el i-ésimo nodo y luego obtener o establecer su valor x:
+
+El tiempo de ejecución de estas operaciones está dominado por el tiempo que lleva
+para encontrar el i-ésimo nodo, y por lo tanto es O(1 + min{i,n − i}).
+3.2.1 Agregar y quitar
+Si tenemos una referencia a un nodo w en un DLList y queremos insertar un nodo
+u antes de w, entonces esto es solo una cuestión de configurar u.next = w, u.prev = w.prev,
+y luego ajustando u.prev.next y u.next.prev. (Consulte la Figura 3.3.)
+al nodo ficticio, no hay necesidad de preocuparse por w.prev o w.next no
+existente.
+
+Ahora, la operación de lista add(i,x) es trivial de implementar. Encontramos el
+i-ésimo nodo en DLList e inserte un nuevo nodo u que contenga x justo antes
+eso.
+
+La única parte no constante del tiempo de ejecución de add(i,x) es el tiempo
+se necesita para encontrar el i-ésimo nodo (usando getNode(i)). Por lo tanto, add(i,x) se ejecuta en
+O(1 + min{i,n − i}) tiempo.
+Eliminar un nodo w de una DLList es fácil. Solo tenemos que ajustar
+punteros en w.next y w.prev para que se salten w. De nuevo, el uso de
+el nodo ficticio elimina la necesidad de considerar cualquier caso especial:
+
+Ahora la operación remove(i) es trivial. Encontramos el nodo con índice i
+y eliminarlo:
+
+Una vez más, la única parte costosa de esta operación es encontrar el i-ésimo nodo
+usando getNode(i), entonces remove(i) se ejecuta en O(1 + min{i,n − i}) tiempo.

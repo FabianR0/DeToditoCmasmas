@@ -1,0 +1,162 @@
+#include <iostream>
+using namespace std;
+
+class Vector {
+private:
+    int* storage; //arreglo para almacenar elementos del vector.
+    int sz; //cuantos elementos tiene el vector actualmente.
+    int capacity; //cuantos elementos puede almacenar el vector sin redimencionarse
+
+public:
+  Vector(){
+      capacity = 5;
+      storage= new int[capacity];
+      sz = 0;
+  }
+  int size(){
+      return sz;
+  }
+  void push_back(int elem){
+      if (sz == capacity){
+          resize();
+      }
+      storage[sz] = elem;
+      sz = sz + 1;
+    }
+    int waste(){
+        return capacity - sz;
+    }
+   
+    int at(int pos) {
+        return storage[pos];
+    }
+   
+    void pop_back() {
+        sz--;
+    }
+    void push_front(int elem){
+      
+	  if (sz == capacity){
+          resize();
+      }
+ 
+	  for(int i = sz; i > 0 ; i--){
+	  
+			storage[i] = storage[i-1];	
+	  }
+ 
+      storage[0] = elem;
+      sz = sz + 1;
+      
+    }
+    void  pop_front(){
+    for(int i = 0; i < sz ; i++){
+			storage[i] = storage[i+1];	
+	  }
+	  sz --;
+	}
+//-------------insertar--------------------------
+    void  insertar(int elem, int pos){
+     if (sz == capacity){
+          resize();
+      }
+ 
+	  for(int i = sz; i > pos ; i--){
+	  
+			storage[i] = storage[i-1];	
+	  }
+ 
+      storage[pos] = elem;
+      sz = sz + 1;
+	}
+//-------------quitar--------------------------
+/*
+ int* storage; //arreglo para almacenar elementos del vector.
+    int sz; //cuantos elementos tiene el vector actualmente.
+    int capacity; //cuantos elementos puede almacenar el vector sin redimencionarse
+*/
+    void  quitar(int pos){
+   if (sz == capacity){
+          resize();
+      }
+ 
+	  for(int i = sz; i < pos ; i++){
+	  
+			storage[pos] = storage[i-1];	
+	  }
+	  //storage[pos]--; le  merna uno 
+	  //sz-=pos; //elimina hasta donde este pos
+	  //sz--;
+	//storage[pos] = sz--; // -0-10-20-7-30-40
+	 // storage[pos] = pos--;//coloca una posicion antes
+	}
+private:
+    void resize(){
+        cout << "ha habido un resize" << endl;
+        int newcapacity = capacity * 1.5;
+        int* ns = new int[newcapacity];
+        for(int i=0; i< sz; i++){
+            ns[i] = storage[i];
+        }
+        delete [] storage;
+        storage = ns;
+        capacity = newcapacity;
+    }
+public:
+    void printInfo() {
+        cout << "Storage: " << storage << endl
+             << "Size: "    << sz << endl
+             << "Capacity: " << capacity << endl << endl;
+    }
+   
+};
+
+int main(){
+    Vector a;
+   
+    cout << a.size() << endl;
+    for(int i=0; i<5; i++){
+        a.push_back(i*10);
+    }
+   
+    a.push_back(10);
+   
+    for(int i = 0; i < a.size(); i++) {
+        cout << " " << a.at(i);
+    }
+    cout << endl;
+    a.pop_back();
+    for(int i = 0; i < a.size(); i++) {
+        cout << " " << a.at(i);
+    }
+    cout << endl;
+    a.push_back(200);
+    for(int i = 0; i < a.size(); i++) {
+        cout << " " << a.at(i);
+    }
+    cout << endl;
+    a.push_front(6);
+    for(int i = 0; i < a.size(); i++) {
+        cout << " " << a.at(i);
+       
+    }
+    cout << endl;
+    a.pop_front();
+     for(int i = 0; i < a.size(); i++) {
+        cout << " " << a.at(i);
+    }
+    cout << endl;
+    a.insertar(25,3);
+     for(int i = 0; i < a.size(); i++) {
+        cout << " " << a.at(i);
+       
+    }
+    cout << endl;
+     a.quitar(3);
+     for(int i = 0; i < a.size(); i++) {
+        cout << "-" << a.at(i);
+       
+    }
+    cout << endl;
+    return 0;
+}
